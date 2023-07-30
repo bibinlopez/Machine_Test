@@ -44,7 +44,17 @@ const menuSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Please provide Dish type'],
       enum: {
-        values: ['meals', 'noodles', 'breakfast', 'pizza', 'dinner', 'lunch'],
+        values: [
+          'meals',
+          'soup',
+          'noodles',
+          'breakfast',
+          'pizza',
+          'dinner',
+          'lunch',
+          'salad',
+          'other',
+        ],
         massage: '{VALUE} is not supported',
       },
     },
@@ -60,7 +70,7 @@ const menuSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Please provide type of consumer'],
       enum: {
-        values: ['Children', 'Adult'],
+        values: ['children', 'adult', 'both'],
         massage: '{VALUE} is not supported',
       },
     },

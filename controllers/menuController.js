@@ -1,7 +1,7 @@
 const Menu = require('../models/menuSchema')
 const CustomError = require('../errors/custom-error')
 
-const createMenu = async (req, res) => {
+const createMenu = async (req, res, next) => {
   try {
     req.body.admin = req.user.userId
     const price = req.body.price
@@ -16,7 +16,7 @@ const createMenu = async (req, res) => {
   }
 }
 
-const getAllMenu = async (req, res) => {
+const getAllMenu = async (req, res, next) => {
   try {
     const menu = await Menu.find({}).populate({
       path: 'admin',
@@ -28,9 +28,10 @@ const getAllMenu = async (req, res) => {
   }
 }
 
-const getMenuByFilter = async (req, res) => {
+const getMenuByFilter = async (req, res, next) => {
   try {
-    const { name, category1, category2, category3, category4 } = req.query
+    const { name, category1, category2, category3, category4, category5 } =
+      req.query
     const queryObject = {}
 
     if (name) {
@@ -48,11 +49,15 @@ const getMenuByFilter = async (req, res) => {
     if (category4) {
       queryObject.category4 = { $regex: category4, $options: 'i' }
     }
+    if (category5) {
+      queryObject.category5 = { $regex: category5, $options: 'i' }
+    }
 
-    const menu = await Menu.find(queryObject).populate({
-      path: 'admin',
-      select: '_id name',
-    })
+    const menu = await Menu.find(queryObject)
+    // .populate({
+    //   path: 'admin',
+    //   select: '_id name',
+    // })
 
     return res.status(200).json({ count: menu.length, data: menu })
   } catch (error) {
@@ -60,13 +65,14 @@ const getMenuByFilter = async (req, res) => {
   }
 }
 
-const getSingleMenu = async (req, res) => {
+const getSingleMenu = async (req, res, next) => {
   try {
     const { id } = req.params
     const menu = await Menu.findById(id).populate({
       path: 'admin',
       select: '_id name',
     })
+
     if (!menu) {
       throw new CustomError(`No menu with the id: ${id}`, 404)
     }
@@ -76,13 +82,14 @@ const getSingleMenu = async (req, res) => {
   }
 }
 
-const updateMenu = async (req, res) => {
+const updateMenu = async (req, res, next) => {
   try {
     const { id } = req.params
     const menu = await Menu.findByIdAndUpdate(id, req.body, {
       new: true,
       runValidators: true,
     })
+
     if (!menu) {
       throw new CustomError(`No menu with the id: ${id}`, 404)
     }
@@ -92,13 +99,14 @@ const updateMenu = async (req, res) => {
   }
 }
 
-const deleteMenu = async (req, res) => {
+const deleteMenu = async (req, res, next) => {
   try {
     const { id } = req.params
-    const menu = await Product.findById(id)
+    const menu = await Menu.findById(id)
     if (!menu) {
       throw new CustomError(`No menu with the id: ${id}`, 404)
     }
+
     await menu.deleteOne()
     return res.status(200).json({ msg: 'Menu deleted!!!' })
   } catch (error) {

@@ -10,6 +10,7 @@ const connectDB = require('./db/connect')
 
 const authRoute = require('./routes/authRoute')
 const userRoute = require('./routes/userRoute')
+const menuRoute = require('./routes/menuRoute')
 
 //middlewares
 const notFoundMiddleware = require('./middlewares/not-found')
@@ -18,13 +19,16 @@ const errorHandlerMiddleware = require('./middlewares/error-handler')
 app.use(morgan('tiny'))
 app.use(express.json())
 
+app.use(express.static('./public'))
+
 app.use('/auth', authRoute)
 app.use('/user', userRoute)
+app.use('/menu', menuRoute)
 
 // home route
-app.get('/', (req, res) => {
-  res.send('Food_Menu_App_api')
-})
+// app.get('/', (req, res) => {
+//   res.send('Food_Menu_App_api')
+// })
 
 app.use(notFoundMiddleware)
 app.use(errorHandlerMiddleware)

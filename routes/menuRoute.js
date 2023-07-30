@@ -15,10 +15,10 @@ const {
 router.post('/create', authMiddleware, authPermission, createMenu) // admin route
 router.get('/get_all', authMiddleware, authPermission, getAllMenu) // admin route
 
-router.get('/get_single', getSingleMenu)
+router.get('/get_single/:id', getSingleMenu)
 router.get('/get_by_filter', getMenuByFilter)
 
-router.put('/update', authMiddleware, authPermission, updateMenu) // admin route
-router.delete('/delete', authMiddleware, authPermission, deleteMenu) // admin route
+router.put('/update/:id', authMiddleware, authPermission, updateMenu) // admin route
+router.delete('/delete/:id', authMiddleware, authPermission, deleteMenu) // admin route
 
 module.exports = router
